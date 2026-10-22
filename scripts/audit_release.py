@@ -7,7 +7,7 @@ import json
 import re
 
 ROOT=Path(__file__).resolve().parents[1]
-EXCLUDED={'.git','__pycache__','build','dist','.venv','.venv-test','data','models','runs','cache'}
+EXCLUDED={'.git','__pycache__','build','dist','.venv','.venv-test','data','runs','cache'}
 BLOCKED_SUFFIXES={'.gguf','.safetensors','.so','.dll','.exe','.key','.pem','.pt','.bin','.log','.pyc'}
 PATTERNS={
     'private-network-address':re.compile(r'(?<![\w.])(?:192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})(?![\w.])'),
@@ -23,6 +23,8 @@ PATTERNS={
 def files(root):
     for p in sorted(root.rglob('*')):
         rel=p.relative_to(root)
+        # Only the root models/ holds weights; runtime/.../models/ holds source.
+        if rel.parts[0]=='models':continue
         if any(part in EXCLUDED or part.startswith('.venv') or part.endswith('.egg-info') for part in rel.parts):continue
         if p.is_file():yield p
 
