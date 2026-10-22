@@ -2,7 +2,9 @@
 ARG SM80_BASE_IMAGE=qwen-flash-sm80:0.2.0
 FROM ${SM80_BASE_IMAGE}
 WORKDIR /opt/q6-sm80
-COPY dependencies.lock.json pyproject.toml README.md LICENSE ./
+COPY Dockerfile dependencies.lock.json pyproject.toml README.md LICENSE NOTICE THIRD_PARTY_NOTICES.md ./
+COPY config/example.json ./config/example.json
+COPY licenses ./licenses
 COPY scripts ./scripts
 COPY provenance ./provenance
 COPY runtime ./runtime
