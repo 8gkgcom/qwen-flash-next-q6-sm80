@@ -3,6 +3,8 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import shlex
+import shutil
 import tarfile
 import tempfile
 import unittest
@@ -105,6 +107,31 @@ class ReleaseTests(unittest.TestCase):
                         'src/__pycache__/module.pyc','.git/config']:
                 path=root/rel;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('fixture')
             self.assertEqual({p.relative_to(root).as_posix() for p in audit.files(root)},{keep})
+
+    def test_docker_copy_stage_contains_config_overlays_and_notices(self):
+        # Exercise the image's actual COPY selection, not the complete checkout.
+        with tempfile.TemporaryDirectory() as tmp:
+            stage=Path(tmp)
+            for line in (ROOT/'Dockerfile').read_text().splitlines():
+                if not line.startswith('COPY '):continue
+                parts=shlex.split(line)[1:]
+                self.assertFalse(any(p.startswith('--') for p in parts),'Update COPY-stage test for new flags')
+                sources,dest=parts[:-1],parts[-1]
+                target=stage/dest
+                for source in sources:
+                    src=ROOT/source
+                    if src.is_dir():shutil.copytree(src,target,dirs_exist_ok=True,ignore=shutil.ignore_patterns('__pycache__'))
+                    else:
+                        out=target/src.name if dest.endswith('/') or len(sources)>1 else target
+                        out.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,out)
+            config=json.loads((stage/'config/example.json').read_text())
+            self.assertEqual(serve.engine_plan(config),serve.engine_plan(self.config()))
+            for manifest,source in [('overlay-files.json','runtime/overlay'),('plugin-files.json','runtime/plugin-overlay')]:
+                for rel,item in json.loads((stage/'provenance'/manifest).read_text()).items():
+                    self.assertEqual(installer.digest(stage/source/rel),item['after_sha256'],rel)
+            for rel in ['LICENSE','NOTICE','THIRD_PARTY_NOTICES.md',
+                        *[p.relative_to(ROOT).as_posix() for p in (ROOT/'licenses').iterdir()]]:
+                self.assertEqual((stage/rel).read_bytes(),(ROOT/rel).read_bytes(),rel)
 
     def test_model_view_rejects_unrelated_architecture(self):
         with self.assertRaisesRegex(ValueError,'hidden_size'):prepare.text_config({'hidden_size':4096})
