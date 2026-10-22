@@ -1,0 +1,541 @@
+--- a/draft_int8_runtime.py
++++ b/draft_int8_runtime.py
+@@ -93,7 +93,7 @@
+             del states, actual, fixture
+         torch.cuda.synchronize();free_after,_=torch.cuda.mem_get_info(weight.device)
+         record={'rank':rank,'group_size':G,'rerank_per_gpu':TOP,'samples':sample_count,'retained':retained,'weight_bytes':qw.numel()*qw.element_size()+scales.numel()*scales.element_size(),'free_before_bytes':free_before,'free_after_bytes':free_after,'total_gpu_bytes':total,'setup_seconds':time.perf_counter()-started,'target_head_pointer_unchanged':True,'other_batch_sizes':'original compute_logits().argmax fallback'}
+-        Path(f'/evidence/draft-int8-rank{rank}.json').write_text(json.dumps(record,indent=2))
++        Path(f'/tmp/q6-sm80-evidence/draft-int8-rank{rank}.json').write_text(json.dumps(record,indent=2))
+         print('DRAFT_INT8_READY '+json.dumps(record),flush=True)
+     DraftModelSpeculator._validate_local_argmax_reduction=validate
+     DraftModelSpeculator._draft_int8_installed=True
+--- a/hc_gemv_runtime.py
++++ b/hc_gemv_runtime.py
+@@ -131,7 +131,7 @@
+                           graph_descriptors=[str(d) for d in self.graphs],
+                           dispatch_unchanged=True, no_mtp_coverage_guard_skipped=True,
+                           m7_unique_weights={k:len(v) for k,v in __import__('m7_joint_runtime')._weights.items()})
+-            Path(f'/evidence/hc-mtp-graphs-rank{rank}-{type(self).__name__}-{self.decode_query_len}.json').write_text(json.dumps(record, indent=2))
++            Path(f'/tmp/q6-sm80-evidence/hc-mtp-graphs-rank{rank}-{type(self).__name__}-{self.decode_query_len}.json').write_text(json.dumps(record, indent=2))
+             print('hc_MTP_GRAPHS_READY', rank, self.decode_query_len, flush=True)
+             return result
+         if torch.cuda.get_device_capability(self.device) != (8, 0):
+@@ -165,7 +165,7 @@
+         record = dict(enabled=True, rank=rank, projections=_captured,
+                       sources=sources, graph_descriptors=[str(d) for d in self.graphs],
+                       graph_replay='unmodified vLLM', request_hooks=False)
+-        evidence = Path(os.environ.get('Q38_HC_STARTUP_DIR', '/evidence'))
++        evidence = Path(os.environ.get('Q38_HC_STARTUP_DIR', '/tmp/q6-sm80-evidence'))
+         evidence.mkdir(parents=True, exist_ok=True)
+         (evidence / f'hc-startup-rank{rank}.json').write_text(json.dumps(record, indent=2))
+         print('HC_GEMV_CLEAN_CAPTURE_OK', rank, len(_captured), flush=True)
+--- a/marlin_preload.py
++++ b/marlin_preload.py
+@@ -50,7 +50,7 @@
+         assert len(seen)==30, (library,'no matching kernels; ABI/config mismatch')
+         rows.append({'library':library,'sha256':digest,'kernels':len(seen),'configs':configs})
+     result={'rank':rank,'seconds':time.monotonic()-start,'resolved':resolve,'libraries':rows}
+-    Path(f'/evidence/marlin-preload-rank{rank}.json').write_text(json.dumps(result,indent=2))
++    Path(f'/tmp/q6-sm80-evidence/marlin-preload-rank{rank}.json').write_text(json.dumps(result,indent=2))
+     print('MARLIN_PRELOAD_READY',rank,[(r['library'],r['kernels']) for r in rows],flush=True)
+     return result
+ 
+--- a/ngram_hybrid_runtime.py
++++ b/ngram_hybrid_runtime.py
+@@ -4,6 +4,7 @@
+ iteration to catch its KV/state up to target-verified tokens before any skip.
+ """
+ import json
++import os
+ from pathlib import Path
+ import torch
+ import torch.distributed as dist
+@@ -56,7 +57,7 @@
+         self.last_req=None;self.mode='baseline';self.calls=0;self.matches=0
+         self.audit=True;self.trace_enabled=True
+         self.rank=get_tp_group().rank_in_group
+-        self.trace=Path('/evidence')/f'hybrid-rank{self.rank}.jsonl'
++        self.trace=Path('/tmp/q6-sm80-evidence')/f'hybrid-rank{self.rank}.jsonl'
+     def prepare(self,batch,num_sampled):
+         r=self.runner;sp=r.speculator;sp.hybrid_candidate=None;sp.hybrid_length=6
+         assert batch.num_reqs==1
+@@ -96,5 +97,7 @@
+             with self.trace.open('a') as f:f.write(json.dumps({'event':'proposal','req':req,'length':count,'total_len':data[1],'sampled':data[2],'source':data[3]})+'\n')
+ 
+ def prepare_hybrid(runner,batch,num_sampled):
++    if os.environ.get("Q38_HYBRID_DRAFT", "0") != "1":
++        return
+     if not hasattr(runner,'_ngram_hybrid'):runner._ngram_hybrid=HybridController(runner)
+     runner._ngram_hybrid.prepare(batch,num_sampled)
+--- a/ple_hang_trace.py
++++ b/ple_hang_trace.py
+@@ -10,7 +10,7 @@
+  try:
+   with _lock:
+    if _rows>=20000:return
+-   if _fd is None:_fd=os.open('/evidence/ple-trace-%d.jsonl'%os.getpid(),os.O_WRONLY|os.O_CREAT|os.O_APPEND,0o644)
++   if _fd is None:_fd=os.open('/tmp/q6-sm80-evidence/ple-trace-%d.jsonl'%os.getpid(),os.O_WRONLY|os.O_CREAT|os.O_APPEND,0o644)
+    os.write(_fd,(json.dumps(dict(time=time.time(),thread=threading.current_thread().name,stage=stage,sequence=sequence,tokens=tokens,**extra))+'\n').encode())
+    _rows+=1
+  except OSError:pass
+--- /dev/null
++++ b/pp_draft_scatter.py
+@@ -0,0 +1,25 @@
++"""Restore PP draft rows without CUDA boolean-index compaction and host sync."""
++import triton
++import triton.language as tl
++
++
++@triton.jit
++def _scatter(Src, Dst, Mapping, S0: tl.constexpr, S1: tl.constexpr,
++             D0: tl.constexpr, D1: tl.constexpr, M0: tl.constexpr,
++             N: tl.constexpr, K: tl.constexpr, BLOCK: tl.constexpr):
++    row = tl.program_id(0)
++    index = tl.load(Mapping + row * M0)
++    col = tl.arange(0, BLOCK)
++    active = (index >= 0) & (index < N) & (col < K)
++    values = tl.load(Src + row * S0 + col * S1, active, other=0)
++    tl.store(Dst + index * D0 + col * D1, values, active)
++
++
++def restore_drafts(dst, mapping, src):
++    # Scheduled valid indices are unique, as required by the original assignment.
++    assert dst.ndim == src.ndim == 2 and mapping.ndim == 1
++    assert src.shape[0] == mapping.shape[0] and src.shape[1] == dst.shape[1]
++    if src.shape[0] and src.shape[1]:
++        _scatter[(src.shape[0],)](src, dst, mapping, *src.stride(), *dst.stride(),
++            mapping.stride(0), dst.shape[0], src.shape[1],
++            triton.next_power_of_2(src.shape[1]), num_warps=1)
+--- a/projection_runtime.py
++++ b/projection_runtime.py
+@@ -119,7 +119,7 @@
+                           manager=type(self).__name__,
+                           graph_descriptors=[str(d) for d in self.graphs],
+                           dispatch_unchanged=True, no_mtp_coverage_guard_skipped=True)
+-            Path(f'/evidence/projection-mtp-graphs-rank{rank}-{type(self).__name__}-{self.decode_query_len}.json').write_text(json.dumps(record, indent=2))
++            Path(f'/tmp/q6-sm80-evidence/projection-mtp-graphs-rank{rank}-{type(self).__name__}-{self.decode_query_len}.json').write_text(json.dumps(record, indent=2))
+             print('projection_MTP_GRAPHS_READY', rank, self.decode_query_len, flush=True)
+             return result
+         from vllm.config.compilation import CUDAGraphMode
+@@ -149,7 +149,7 @@
+         record = dict(rank=rank, count=len(_captured), projections=_captured, sources=sources,
+                       extra_weight_bytes=0, request_hooks=False, alternative_graphs=False,
+                       graph_replay='unmodified vLLM')
+-        Path(f'/evidence/projection-startup-rank{rank}.json').write_text(json.dumps(record, indent=2))
++        Path(f'/tmp/q6-sm80-evidence/projection-startup-rank{rank}.json').write_text(json.dumps(record, indent=2))
+         print('PROJECTION_CLEAN_CAPTURE_OK', rank, len(_captured), flush=True)
+         _captured.clear()
+         return result
+--- /dev/null
++++ b/sm80_ram_hooks.py
+@@ -0,0 +1,44 @@
++"""Opt-in upstream compute hooks with the original async CPU PLE transport.
++
++The SM80 repository installs these in its GDS initializer. This small adapter
++keeps that transport disabled and installs only compute/kernel hooks. It does
++not change target weights, n-gram hashing, draft verification or scheduling.
++"""
++import os
++from functools import wraps
++
++_installed = False
++
++
++def install(runner_cls):
++    global _installed
++    if _installed or os.environ.get('Q38_RAM_COMPUTE_OPT') != '1':
++        return
++    if os.environ.get('VLLM_PLE_CPU_OFFLOAD') != '1' or os.environ.get('VLLM_PLE_GDS_RUNNER') == '1':
++        raise RuntimeError('RAM compute hooks require CPU PLE and disabled GDS runner')
++    from triton_preload import initialize
++    previous_load = runner_cls.load_model
++    @wraps(previous_load)
++    def load_with_preload(self, *args, **kwargs):
++        # PP ranks each have TP rank zero. Use the selected CUDA device to keep
++        # their startup evidence separate while using the same upstream loader.
++        initialize(self.device, rank=self.device.index)
++        return previous_load(self, *args, **kwargs)
++    runner_cls.load_model = load_with_preload
++    if os.environ.get('Q38_RAM_PARALLEL') in ('tp2', 'tep2'):
++        from hc_gemv_runtime import install as hc
++        from projection_runtime import install as projection
++        from draft_int8_runtime import install as draft
++        hc(runner_cls)
++        projection(runner_cls)
++        draft()
++    elif os.environ.get('Q38_RAM_PARALLEL') == 'pp2':
++        from sm80_ple_local import install as local_ple
++        local_ple()
++        from sm80_pp_draft_int8 import install as pp_draft
++        pp_draft()
++        if os.environ.get("Q38_PP_M3_HC") == "1":
++            from m3_hc_runtime import install as m3_hc
++            m3_hc()
++    _installed = True
++    print('SM80_RAM_COMPUTE_HOOKS_INSTALLED', os.environ.get('Q38_RAM_PARALLEL'), flush=True)
+--- a/sparse_draft.py
++++ b/sparse_draft.py
+@@ -74,4 +74,5 @@
+ 
+ 
+ def verification_logits(sp):
+- return sp.sparse_logits if sp._sparse_q_active else None
++ return (sp.sparse_logits if getattr(sp, "_sparse_q_active", False)
++         else getattr(sp, "draft_logits", None))
+--- a/tp_ple_transport.py
++++ b/tp_ple_transport.py
+@@ -134,6 +134,6 @@
+   self.stream.synchronize()
+   if self.owner:self.owner.close()
+   self.closed=True;self.close_count+=1
+-  Path(f'/evidence/tp-ple-rank{self.rank}.json').write_text(json.dumps(self.stats()))
++  Path(f'/tmp/q6-sm80-evidence/tp-ple-rank{self.rank}.json').write_text(json.dumps(self.stats()))
+   self.layer._ple_gds_input_connector=None
+   self.comm.destroy()
+--- a/triton_preload.py
++++ b/triton_preload.py
+@@ -37,6 +37,10 @@
+     manifest=json.loads((root/'manifest.json').read_text())
+     extra=root.parent/'memory_extra_preload'
+     manifest+= [dict(r,file=str(extra/r['file'])) for r in json.loads((extra/'manifest.json').read_text())]
++    if extra_model_root := os.environ.get('Q38_TRITON_PRELOAD_DIR'):
++        extra_model_root = Path(extra_model_root)
++        manifest += [dict(row, file=str(extra_model_root / row['file']))
++                     for row in json.loads((extra_model_root / 'manifest.json').read_text())]
+     records=[]
+     def load(name,binary,shared,ordinal):
+         digest=hashlib.sha256(binary).hexdigest()
+@@ -44,7 +48,7 @@
+         if key in _handles:return _handles[key]
+         def audit(stage):
+             if os.environ.get('Q38_PRELOAD_AUDIT')=='1':
+-                with Path(f'/evidence/native-load-rank{rank}.jsonl').open('a') as f:
++                with Path(f'/tmp/q6-sm80-evidence/native-load-rank{rank}.jsonl').open('a') as f:
+                     f.write(json.dumps(dict(stage=stage,name=name,sha256=digest,time=time.time()))+'\n')
+         audit('start')
+         result=original(name,binary,shared,ordinal)
+@@ -59,7 +63,7 @@
+         records.append(dict(**row,loaded=True))
+     utils.load_binary=load
+     _initialized=True
+-    Path(f'/evidence/triton-preload-rank{rank}.json').write_text(json.dumps(dict(
++    Path(f'/tmp/q6-sm80-evidence/triton-preload-rank{rank}.json').write_text(json.dumps(dict(
+         count=len(records),records=records,device=device.index,phase='before_model_load',
+         cuda_loading_mode=mode.value, cuda_loading_env=os.environ.get('CUDA_MODULE_LOADING'),
+         triton=triton.__version__, torch=torch.__version__,extra_model_weights=False),indent=2))
+--- a/vllm/models/qwen3_8_flash_next/nvidia/mtp.py
++++ b/vllm/models/qwen3_8_flash_next/nvidia/mtp.py
+@@ -113,6 +113,10 @@
+         raise ValueError("speculative_config.draft_model_config must be set")
+ 
+     draft_quant_config = get_draft_quant_config(vllm_config)
++    if draft_quant_config is not None and draft_quant_config.get_name() == "gguf":
++        from flashnext_gguf.adapter import configure
++        configure(draft_quant_config, speculative_config.draft_model_config)
++
+ 
+     # inject packed and ignored modules to the quantization config of draft model
+     if draft_quant_config is not None:
+--- a/vllm/models/qwen3_8_flash_next/nvidia/ple_layer.py
++++ b/vllm/models/qwen3_8_flash_next/nvidia/ple_layer.py
+@@ -279,16 +279,20 @@
+         )
+         divisor = int(config.make_ngram_vocab_size_divisible_by)
+         padded_vocab_size = ((offset + divisor - 1) // divisor) * divisor
+-        self.ngram_embedding = VocabParallelEmbedding(
+-            padded_vocab_size,
+-            self.head_dim,
+-            params_dtype=params_dtype,
+-            padding_size=divisor,
+-            prefix=f"{prefix}.ngram_embedding",
+-            quant_method=_get_ple_embedding_quant_method(
+-                quant_config, f"{prefix}.ngram_embedding"
+-            ),
+-        )
++        if quant_config is not None and quant_config.get_name() == "gguf":
++            from flashnext_gguf.q8 import Q8PLEEmbedding
++            self.ngram_embedding = Q8PLEEmbedding(padded_vocab_size, self.head_dim)
++        else:
++            self.ngram_embedding = VocabParallelEmbedding(
++                padded_vocab_size,
++                self.head_dim,
++                params_dtype=params_dtype,
++                padding_size=divisor,
++                prefix=f"{prefix}.ngram_embedding",
++                quant_method=_get_ple_embedding_quant_method(
++                    quant_config, f"{prefix}.ngram_embedding"
++                ),
++            )
+         self.register_buffer(
+             "positions_buffer",
+             torch.arange(max_total_tokens, dtype=torch.int64),
+@@ -428,6 +432,10 @@
+         ngram_ids = torch.cat(id_blocks, dim=-1)
+         if output_buffer is not None:
+             output = output_buffer[:num_tokens, : self.embedding_dim]
++            from flashnext_gguf.q8 import Q8PLEEmbedding
++            if isinstance(self.ngram_embedding, Q8PLEEmbedding):
++                self.ngram_embedding(ngram_ids.reshape(-1), out=output.reshape(-1, self.head_dim))
++                return output
+             torch.index_select(
+                 self.ngram_embedding.weight,
+                 0,
+@@ -440,6 +448,8 @@
+     def get_offload_output_dtype(self, default_dtype: torch.dtype) -> torch.dtype:
+         """Keep quantized lookup results in their embedding storage dtype."""
+         embedding = getattr(self, "ngram_embedding", None)
++        if hasattr(embedding, "output_dtype"):
++            return embedding.output_dtype
+         weight = getattr(embedding, "weight", None)
+         if weight is not None:
+             return weight.dtype
+--- a/vllm/v1/core/sched/scheduler.py
++++ b/vllm/v1/core/sched/scheduler.py
+@@ -555,13 +555,20 @@
+                 req_index += 1
+                 continue
+ 
+-            # Synchronous V2 decode knows the actual draft count. Near the
+-            # model-length boundary shorten that count before enforcing full
+-            # verification, otherwise the full-batch guard can defer forever.
+-            # Async placeholders need separate handling: do not alter them here.
++            # At the context boundary, a full verification batch may no longer
++            # fit. Shorten the draft only when its state is settled. Async V2
++            # uses placeholder draft IDs but the worker consumes the scheduled
++            # count, so a drained request can safely use fewer (or zero) drafts.
++            # Never rewrite draft state belonging to an in-flight async step.
+             if (
+                 self.use_v2_model_runner
+-                and not self.scheduler_config.async_scheduling
++                and (
++                    not self.scheduler_config.async_scheduling
++                    or (
++                        request.num_output_placeholders == 0
++                        and request.num_in_flight_tokens == 0
++                    )
++                )
+                 and request.spec_token_ids
+                 and not request.is_prefill_chunk
+             ):
+--- a/vllm/v1/ple_offload/worker.py
++++ b/vllm/v1/ple_offload/worker.py
+@@ -20,6 +20,7 @@
+ """
+ 
+ import contextlib
++import os
+ import multiprocessing.process
+ import pickle
+ import signal
+@@ -273,6 +274,9 @@
+             # The flag lets PleOffloadLayer subclasses execute their complete
+             # constructors instead of becoming empty GPU-worker placeholders.
+             mark_as_offload_worker()
++            # CPU PLE has no GPU pipeline stages; its PP size is always one.
++            if os.environ.get('Q38_RAM_PARALLEL') == 'pp2':
++                os.environ.pop('VLLM_PP_LAYER_PARTITION', None)
+ 
+             # Initialize Gloo before installing the real VllmConfig. This keeps
+             # the CPU process in an isolated rank-zero, world-size-one group.
+@@ -359,6 +363,10 @@
+         """
+         model_config = self.vllm_config.model_config
+         load_config = self.vllm_config.load_config
++        if load_config.load_format == "flashnext_gguf":
++            import os
++            os.environ.pop("VLLM_PP_LAYER_PARTITION", None)
++
+ 
+         # Step 1: build complete structure, while only PLE subtrees allocate CPU
+         # memory. All transformer, MoE, and vision parameters remain on meta.
+@@ -411,8 +419,15 @@
+                     matched_checkpoint_tensors += 1
+                     yield weight_name, tensor
+ 
+-        loader = get_model_loader(load_config)
+-        if isinstance(loader, DummyModelLoader):
++        if load_config.load_format == "flashnext_gguf":
++            from flashnext_gguf.loader import FlashNextLoader
++            loader = FlashNextLoader(load_config)
++        else:
++            loader = get_model_loader(load_config)
++        if type(loader).__name__ == "FlashNextLoader":
++            from flashnext_gguf.loader import load_ple_only
++            load_ple_only(self, model, offload_layers)
++        elif isinstance(loader, DummyModelLoader):
+             logger.info(
+                 "Initializing dummy weights for %d PleOffloadLayer(s) ...",
+                 len(offload_layers),
+--- a/vllm/v1/worker/gpu/model_runner.py
++++ b/vllm/v1/worker/gpu/model_runner.py
+@@ -1079,10 +1079,9 @@
+                 idx_mapping = outputs["idx_mapping"]
+                 self.postprocess_sampled(**outputs)
+                 if draft_tokens is not None:
+-                    valid = idx_mapping >= 0
+-                    self.req_states.draft_tokens[idx_mapping[valid]] = draft_tokens[
+-                        valid
+-                    ]
++                    # Fixed-shape masked scatter avoids CUDA nonzero host sync.
++                    from pp_draft_scatter import restore_drafts
++                    restore_drafts(self.req_states.draft_tokens, idx_mapping, draft_tokens)
+ 
+     def add_requests(self, scheduler_output: SchedulerOutput) -> None:
+         for new_req_data in scheduler_output.scheduled_new_reqs:
+@@ -2053,7 +2052,8 @@
+         if self.num_speculative_steps > 0:
+             # Spec-decode and diffusion LLMs both use draft tokens but the latter does
+             # not have a speculator (i.e. self.speculator is None)
+-            self.draft_tokens_handler.hybrid_length = self.speculator.hybrid_length
++            self.draft_tokens_handler.hybrid_length = getattr(
++                self.speculator, "hybrid_length", self.num_speculative_steps)
+             self.draft_tokens_handler.set_draft_tokens(
+                 input_batch,
+                 self.req_states.draft_tokens[input_batch.idx_mapping],
+@@ -2230,3 +2230,6 @@
+ # --- bounded GDS PLE runner hook (VLLM_PLE_GDS_RUNNER=1) ---
+ from vllm_ple_gds_runner import install_runner_hooks as _install_gds_runner_hooks
+ _install_gds_runner_hooks()
++
++from sm80_ram_hooks import install as _install_ram_compute_hooks
++_install_ram_compute_hooks(GPUModelRunner)
+--- a/vllm/v1/worker/gpu/spec_decode/autoregressive/speculator.py
++++ b/vllm/v1/worker/gpu/spec_decode/autoregressive/speculator.py
+@@ -2,6 +2,7 @@
+ # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+ from typing import Any
+ 
++import os
+ import torch
+ import torch.nn as nn
+ 
+@@ -362,7 +363,8 @@
+         )
+         self.on_multi_step_decode_end(num_reqs)
+ 
+-        self.draft_tokens[:num_reqs, 6:].fill_(-1)
++        if os.environ.get("Q38_HYBRID_DRAFT", "0") == "1":
++            self.draft_tokens[:num_reqs, 6:].fill_(-1)
+         return self.draft_tokens[:num_reqs]
+ 
+     @torch.inference_mode()
+@@ -478,7 +480,8 @@
+ 
+         attn_metadata = None
+         slot_mappings_by_layer = None
+-        for step in range(1, 6):
++        for step in range(1, 6 if os.environ.get("Q38_HYBRID_DRAFT", "0") == "1"
++                          else self.num_speculative_steps):
+             # Rebuild every step when positions advance, or just once
+             # on the first step when positions are constant (Gemma4 MTP).
+             if not skip_attn and (self.advance_draft_positions or step == 1):
+@@ -579,7 +582,8 @@
+             else []
+         )
+ 
+-        for step in range(1, 6):
++        for step in range(1, 6 if os.environ.get("Q38_HYBRID_DRAFT", "0") == "1"
++                          else self.num_speculative_steps):
+             self.current_draft_step.fill_(step)
+             self._generate_draft(
+                 num_reqs,
+--- a/vllm/v1/worker/gpu/spec_decode/utils.py
++++ b/vllm/v1/worker/gpu/spec_decode/utils.py
+@@ -23,7 +23,7 @@
+         self, input_batch: InputBatch, draft_tokens: torch.Tensor
+     ) -> None:
+         draft_tokens = draft_tokens[:, :getattr(self, "hybrid_length", draft_tokens.shape[1])]
+-        self.req_ids = input_batch.req_ids
++        self.req_ids = list(input_batch.req_ids)
+         self.num_draft_tokens = draft_tokens.shape[1]
+         if not input_batch.has_structured_output_reqs:
+             # No draft token validation needs to be performed by
+--- a/vllm_ple_mmap.py
++++ b/vllm_ple_mmap.py
+@@ -36,6 +36,8 @@
+   VLLM_PLE_MMAP_PREWARM=0    1 = stream the whole table once at load to fill the
+                              page cache with whatever memory is free (harmless,
+                              evictable; ~10 s at 4.7 GB/s)
++  VLLM_PLE_RAM_GATHER=1      exact native byte gather from resident RAM
++  VLLM_PLE_RAM_GATHER_MAX_ROWS=262144  larger batches use the original thread pool
+   VLLM_PLE_CPU_OFFLOAD=1      use vLLM's async PLE worker + pinned H2D path
+ 
+ Install: the Dockerfile copies this file next to vllm and appends
+@@ -46,6 +48,7 @@
+ from __future__ import annotations
+ 
+ import glob
++import ctypes
+ import json
+ import logging
+ import math
+@@ -129,12 +132,38 @@
+             )
+             self.rows_total += rows
+         self.pool = ThreadPoolExecutor(max_workers=max(1, int(workers)))
++        self._ram_gather = None
++        self._ram_max_rows = max(0, _env_int("VLLM_PLE_RAM_GATHER_MAX_ROWS", 4096))
++        if _env_int("VLLM_PLE_RAM_GATHER", 0):
++            path = os.path.join(os.path.dirname(__file__), "ple_ram_gather.so")
++            library = ctypes.CDLL(path)
++            function = library.ple_ram_gather
++            function.argtypes = [ctypes.c_void_p, ctypes.c_void_p,
++                                 ctypes.c_int64, ctypes.c_int64, ctypes.c_int64,
++                                 ctypes.c_void_p, ctypes.c_int64, ctypes.c_void_p]
++            function.restype = ctypes.c_int
++            self._ram_library = library
++            self._ram_pointers = np.array(
++                [mm.ctypes.data if mm is not None else 0 for mm in self.mm], dtype=np.uintp)
++            self._ram_sizes = np.array(
++                [mm.shape[0] if mm is not None else 0 for mm in self.mm], dtype=np.int64)
++            self._ram_gather = function
++            logger.info("PLE RAM: exact native gather enabled for up to %d rows", self._ram_max_rows)
+ 
+     def gather(self, ids: np.ndarray) -> np.ndarray:
+         """ids: int64 [N] global row ids -> uint8 [N, row_bytes] (a fresh array)."""
+         ids = np.ascontiguousarray(ids, dtype=np.int64).reshape(-1)
+         if ids.size == 0:
+             return np.empty((0, self.row_bytes), dtype=np.uint8)
++        if self._ram_gather is not None and ids.size <= self._ram_max_rows:
++            out = np.empty((ids.size, self.row_bytes), dtype=np.uint8)
++            status = self._ram_gather(
++                self._ram_pointers.ctypes.data, self._ram_sizes.ctypes.data,
++                len(self.mm), self.shard_size, self.row_bytes,
++                ids.ctypes.data, ids.size, out.ctypes.data)
++            if status:
++                raise IndexError("PLE native gather: row id outside available shards")
++            return out
+         # Dedupe + sort: repeated n-grams are common, and sorted rows improve
+         # locality inside a shard.
+         uniq, inverse = np.unique(ids, return_inverse=True)
+@@ -174,6 +203,22 @@
+ 
+     def prewarm(self) -> None:
+         """Stream every shard once so the page cache holds as much as it can."""
++        if _env_int("VLLM_PLE_MMAP_LOCK", 0):
++            # Lock only the existing read-only PLE mappings, keeping their
++            # quantization and the async pinned-row transfer path unchanged.
++            libc = ctypes.CDLL(None, use_errno=True)
++            libc.mlock.argtypes = [ctypes.c_void_p, ctypes.c_size_t]
++            libc.mlock.restype = ctypes.c_int
++            locked = 0
++            for mm in self.mm:
++                if mm is None:
++                    continue
++                if libc.mlock(ctypes.c_void_p(mm.ctypes.data), mm.nbytes) != 0:
++                    err = ctypes.get_errno()
++                    raise OSError(err, "PLE RAM lock failed; check available RAM and LimitMEMLOCK")
++                locked += mm.nbytes
++            logger.info("PLE RAM: locked %.3f GiB in memory", locked / 2**30)
++            return
+         block = 64 << 20
+         for path, mm in zip(self.paths, self.mm):
+             if path is None or mm is None:
+@@ -181,6 +226,7 @@
+             start = mm.offset
+             end = start + mm.shape[0] * mm.shape[1]
+             with open(path, "rb", buffering=0) as f:
++                f.seek(start)
+                 pos = start
+                 while pos < end:
+                     n = f.readinto(bytearray(min(block, end - pos)))  # noqa: F841

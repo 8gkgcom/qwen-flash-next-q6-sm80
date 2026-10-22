@@ -1,0 +1,57 @@
+--- a/vllm_gguf_plugin/csrc/gguf/moe_vec.cuh
++++ b/vllm_gguf_plugin/csrc/gguf/moe_vec.cuh
+@@ -13,7 +13,8 @@
+   const auto token = blockIdx.z / topk;
+   const auto expert = (topk_ids)[blockIdx.z];
+ 
+-  if (row >= nrows) {
++  // vLLM marks padded/unrouted slots with -1. The caller zeroes dst.
++  if (row >= nrows || expert < 0) {
+     return;
+   }
+ 
+--- a/vllm_gguf_plugin/quantization/fused_moe.py
++++ b/vllm_gguf_plugin/quantization/fused_moe.py
+@@ -41,6 +41,8 @@
+     weight_type2: int,
+     activation: str,
+ ) -> torch.Tensor:
++    from flashnext_gguf.debug import check_moe
++    check_moe(x, w1, w2, topk_weights, topk_ids)
+     activation_enum = MoEActivation.from_str(activation)
+ 
+     def act(inp: torch.Tensor):
+--- a/vllm_gguf_plugin/quantization/params.py
++++ b/vllm_gguf_plugin/quantization/params.py
+@@ -23,6 +23,9 @@
+     layer: torch.nn.Module,
+     fallback_weight_loader=None,
+ ):
++    from vllm.model_executor.layers.linear import ReplicatedLinear
++    if isinstance(layer, ReplicatedLinear) and not hasattr(layer, "weight_loader_v2"):
++        return lambda param, loaded_weight, loaded_shard_id=None: param._store(loaded_weight, shard_id=loaded_shard_id)
+     return (
+         layer.weight_loader_v2
+         if hasattr(layer, "weight_loader_v2")
+@@ -198,7 +201,7 @@
+     return_success: bool = False,
+ ) -> bool | None:
+     _materialize_gguf_moe_param(layer, param, loaded_weight, shard_id)
+-    return base_weight_loader(
++    result = base_weight_loader(
+         param,
+         loaded_weight,
+         weight_name,
+@@ -206,6 +209,12 @@
+         expert_id=expert_id,
+         return_success=return_success,
+     )
++
++    if result is not False:
++        seen = getattr(param, "_gguf_loaded_expert_shards", set())
++        seen.add((expert_id, shard_id))
++        param._gguf_loaded_expert_shards = seen
++    return result
+ 
+ 
+ def _gguf_moe_weight_type_loader(
