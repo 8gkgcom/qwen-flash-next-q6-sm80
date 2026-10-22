@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-22",
+  "release": "0.1.0",
+  "status": "experimental-source-package",
+  "cpu_tests": {
+    "environment": "Local Ubuntu under WSL, Python 3.12.3, g++",
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "command": "PYTHONPATH=src Q6_REQUIRE_CPP=1 python3 -m unittest discover -s tests -v"
+  },
+  "source_checks": {
+    "pinned_archives_verified": 3,
+    "sm80_overlay_inputs_verified": 19,
+    "plugin_overlay_inputs_verified": 3,
+    "sm80_overlay_idempotence": true,
+    "prepared_model_config_matches_original_deployment": true,
+    "local_document_links_valid": true
+  },
+  "packaging_scope": "Only selected source, documentation, notices and allowlisted historical numeric results; no weights, credentials, original server logs or compiled binaries",
+  "original_service": {
+    "remote_actions": "read-only source snapshot and service/config fingerprint checks",
+    "same_process_still_running": true,
+    "restarts_observed": 0,
+    "console_source_and_configuration_unchanged": true
+  },
+  "not_performed": [
+    "fresh Docker image build",
+    "full-model startup from the new package",
+    "new GPU kernel validation",
+    "new inference or load tests against the original service"
+  ],
+  "historical_evidence": "benchmarks/reference/2026-10-22.json",
+  "limitations": "Original deployment measurements are not verification of the repackaged Docker recipe. First deployment requires the documented GPU acceptance checks."
+}

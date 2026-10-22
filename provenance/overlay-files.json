@@ -1,0 +1,78 @@
+{
+  "draft_int8_runtime.py": {
+    "before_sha256": "b12c774911d5517b93894f89e84f4f0104da116c8174801fc2da2e8e97d19137",
+    "after_sha256": "aabf69accbe01bad546c3c6fd3a00f97a6d3306298d07e3fb49261206bf2f47a"
+  },
+  "hc_gemv_runtime.py": {
+    "before_sha256": "ec0df5c3ce1ec202b3b2dce587be0bad84b6bfc50c38aa67792ca79d643287f7",
+    "after_sha256": "9c737d4ae04b46bc6bf2e3648891dd593689a2a76a0014abec67aff4ff9d56f8"
+  },
+  "marlin_preload.py": {
+    "before_sha256": "0f0d51a8609d62b54be5fce5427314411c285e796e3028fa1b55fa2242a7bba2",
+    "after_sha256": "ccd01bb377f9ab8a8191a21ca9c53e375768efb535b7ddd05d9886cffc994551"
+  },
+  "ngram_hybrid_runtime.py": {
+    "before_sha256": "7fd60930b9f3a7e911886919e0b2b3d6b5d99e30586d6da216e64fa36d30d6c0",
+    "after_sha256": "07cddc00ec08db1258fab786edf4c0efa23018d12be27836f7aa37ad955b6f0a"
+  },
+  "ple_hang_trace.py": {
+    "before_sha256": "c7384953073b79caf6ee5dc841e645dd2a74890487615d549c162664a0818c59",
+    "after_sha256": "780dbc8b60d7440b840cb33fb208fdae242e505dffd2fdf44e8796538bb903a5"
+  },
+  "pp_draft_scatter.py": {
+    "before_sha256": null,
+    "after_sha256": "0ea3199e7778cdb71e2b8b5299632c969ee94ee71b340eb062e28c8c4702db3e"
+  },
+  "projection_runtime.py": {
+    "before_sha256": "908be73f6afbf4cd296ccb628b583bc34c029aa3b265c1463aae58a834fc5276",
+    "after_sha256": "4470e2e439436aaa2a0b1b1743439c634bcc26167e5e1a1058643a8fdd690e6f"
+  },
+  "sm80_ram_hooks.py": {
+    "before_sha256": null,
+    "after_sha256": "d060b81d643b72afe6f179bc13ec12cfcd8c1fdd6f0faf3ede0e633cb7340db8"
+  },
+  "sparse_draft.py": {
+    "before_sha256": "cf7ce9681c4049155a3f5d5b91c904d3e6571cfef7940d8e9cad733ef4ce48e6",
+    "after_sha256": "33b1a105dd21c49dbc1a7ef55993349441e5f2c4ca7ab0f65d0211951c098a67"
+  },
+  "tp_ple_transport.py": {
+    "before_sha256": "e6deffcfc88fe9fb12e2dc7e10f0e9f55369b1b56e841f4ae8f11e07198d9b9a",
+    "after_sha256": "64589459165c684c93b90cca63bf866fe94a990d53fe026eeb158e6f51afb32f"
+  },
+  "triton_preload.py": {
+    "before_sha256": "d7b873adf5434af364411940e4c084b87df2fead67e9916b503eb9e7e08dcd55",
+    "after_sha256": "b7c96ca56a570b08e6b403424e91f82a0a2d87b66a8f58f547b733b7396d5614"
+  },
+  "vllm/models/qwen3_8_flash_next/nvidia/mtp.py": {
+    "before_sha256": "b4482d641fb9cf2b7d902a6dcbcb7a437234d55e9bc4a0a09bb9fc7f6fc0f0f0",
+    "after_sha256": "35ade4831821b9ace5bf26576008f00ab5d5edec374a6a005900d174a979e29b"
+  },
+  "vllm/models/qwen3_8_flash_next/nvidia/ple_layer.py": {
+    "before_sha256": "51681a8acc12fb3db41fc93097ce8076758b24befc5db9415bb5343506b84801",
+    "after_sha256": "7ae9c578bbae7412188710112c868ab77acc77c11907fcd0acb95d1101894f14"
+  },
+  "vllm/v1/core/sched/scheduler.py": {
+    "before_sha256": "a3055b1bc4fc7b9cd6ec4fb8efd998faa7262d32900bb3ea6320ba9bbaf7337a",
+    "after_sha256": "0737a1ce865fdbff31cee7d278b577b5ee078c85e2f8aed60e6dad558b3d0b7b"
+  },
+  "vllm/v1/ple_offload/worker.py": {
+    "before_sha256": "f93a0a8c40ee3c536e60cb027f5d6e76cde0a51e62b540c82e2c15b2a72b7f5f",
+    "after_sha256": "0709ee80dff0e4e8996a8e7b9dc442a56e5f0465d43e466c9227b2568dadaffe"
+  },
+  "vllm/v1/worker/gpu/model_runner.py": {
+    "before_sha256": "d64ef8e6e0e54c018c369f5c626504c522029b20392a70aac368c38cfd461d59",
+    "after_sha256": "8d4cef9b5b6900809f5f03088d2512e74cb1eb4938a9a960fdf778f7d3829c91"
+  },
+  "vllm/v1/worker/gpu/spec_decode/autoregressive/speculator.py": {
+    "before_sha256": "9cc5a5a5c8c20ba607ef7d66c4b6c6b1e80bcc3fbfe6bd008434221f2b4897e6",
+    "after_sha256": "095e4e7ea66151eb3b1ef8d84ca5ad85411155f76e1815eed82608844839bc57"
+  },
+  "vllm/v1/worker/gpu/spec_decode/utils.py": {
+    "before_sha256": "5f016cef20baa0ebc8d75fb1cfb69c18e4d5ed6344dbda07ce3192dde5e8d5b2",
+    "after_sha256": "b4fa8c25c6467a31db66025be4a48c96c64f82cbe8b3d3f7185c70e0cb9927af"
+  },
+  "vllm_ple_mmap.py": {
+    "before_sha256": "709a6ff0c4ec5d47f5ee547b77c263bc066e13017c0c2fb5cd2ef9263568c5d2",
+    "after_sha256": "250d0d1c71e6d930f88b765c22dea3b551c196b64d78d7c47896fc9a9ca51ee8"
+  }
+}

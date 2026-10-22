@@ -1,0 +1,177 @@
+[
+  {
+    "path": "src/flashnext_gguf/__init__.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "bcb579ff1fb8795b9beaf70b0c800adbc40fd88fe48c16ad0c3ba082d968ee2a"
+  },
+  {
+    "path": "src/flashnext_gguf/adapter.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "65f0893dd9d104757276baf9125b5dff3573b502b5f0512019fdf14fd118283b"
+  },
+  {
+    "path": "src/flashnext_gguf/loader.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "b5a7f9266806df2b488812c6890523b01659006f7314975afd322601d828e7b1"
+  },
+  {
+    "path": "src/flashnext_gguf/q8.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "16ed0884d4a7c2709869ca3b7cc92f33f65e265e565df6d2c92567b8299351ed"
+  },
+  {
+    "path": "src/flashnext_gguf/optimizations/q6_cpu_ipc.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "af0b6019418e45c0307183ee4ab0c486f5c7d0b1cf125ba54bb2397bd9d60469"
+  },
+  {
+    "path": "src/flashnext_gguf/optimizations/q6_draft_q8_marlin.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "a677d1798ce50f6231c7d3d83d512aedab78949b637ff8c6b9604f9f1160662c"
+  },
+  {
+    "path": "src/flashnext_gguf/optimizations/q6_dynamic_graphs.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "1c603affaa11542843cc9b6a6a7f1202ab79dd610ec647be8c91a641c86f6a19"
+  },
+  {
+    "path": "src/flashnext_gguf/optimizations/q6_prefill_guard.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "2ec99d5a8aac2048215d245bbb0eb0ddbe52382fe8115f93349c6c5193377cd9"
+  },
+  {
+    "path": "src/flashnext_gguf/optimizations/q6_shortconv_async.py",
+    "origin": "local Q6 integration; deployed source snapshot",
+    "source_sha256": "0b8aa286d0d11e66141e8df9b64d3ef5c5a3a5178363f810ecf44dce9d9b4dd0"
+  },
+  {
+    "path": "runtime/overlay/draft_int8_runtime.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "0a59c92a763af5c6dd593f1128785fb6b12d21e652e54049754c2f27148f0314"
+  },
+  {
+    "path": "runtime/overlay/hc_gemv_runtime.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "4425f11ee853f7bc81ad2c97acd9b24909257666e2cfc58edd00fff95da21729"
+  },
+  {
+    "path": "runtime/overlay/marlin_preload.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "a3badca5c79de10f8ca686edc47a7bd0976fbb7ded9440d10cd7de743e059b76"
+  },
+  {
+    "path": "runtime/overlay/ngram_hybrid_runtime.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "3548523d281c91e216a2134a890de6165701538a511852f75a63cac2ebaf0689"
+  },
+  {
+    "path": "runtime/overlay/ple_hang_trace.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "618fdd656c477e456109411051d8f3e3ffeb47ecf1811fde89807ff7fa87cb81"
+  },
+  {
+    "path": "runtime/overlay/pp_draft_scatter.py",
+    "origin": "local PP2 integration",
+    "source_sha256": "0ea3199e7778cdb71e2b8b5299632c969ee94ee71b340eb062e28c8c4702db3e"
+  },
+  {
+    "path": "runtime/overlay/projection_runtime.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "987970b53de4297d719d51715d8bbc31ecb3fb7db852bbb05ebc506ffd544424"
+  },
+  {
+    "path": "runtime/overlay/sm80_ram_hooks.py",
+    "origin": "local PP2 integration",
+    "source_sha256": "d060b81d643b72afe6f179bc13ec12cfcd8c1fdd6f0faf3ede0e633cb7340db8"
+  },
+  {
+    "path": "runtime/overlay/sparse_draft.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "33b1a105dd21c49dbc1a7ef55993349441e5f2c4ca7ab0f65d0211951c098a67"
+  },
+  {
+    "path": "runtime/overlay/tp_ple_transport.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "047b4f814661a27cac2dca90818af39e5cb16bd2ed884ae4f118a934e9347fbc"
+  },
+  {
+    "path": "runtime/overlay/triton_preload.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "a54a4fba4fc7676d7f908a230fcc3d4976aca5bd4d8ab69f1ce7bcf4b5dac31d"
+  },
+  {
+    "path": "runtime/overlay/vllm/models/qwen3_8_flash_next/nvidia/mtp.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "35ade4831821b9ace5bf26576008f00ab5d5edec374a6a005900d174a979e29b"
+  },
+  {
+    "path": "runtime/overlay/vllm/models/qwen3_8_flash_next/nvidia/ple_layer.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "7ae9c578bbae7412188710112c868ab77acc77c11907fcd0acb95d1101894f14"
+  },
+  {
+    "path": "runtime/overlay/vllm/v1/core/sched/scheduler.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "0737a1ce865fdbff31cee7d278b577b5ee078c85e2f8aed60e6dad558b3d0b7b"
+  },
+  {
+    "path": "runtime/overlay/vllm/v1/ple_offload/worker.py",
+    "origin": "vLLM base image with local PLE loader changes",
+    "source_sha256": "0709ee80dff0e4e8996a8e7b9dc442a56e5f0465d43e466c9227b2568dadaffe"
+  },
+  {
+    "path": "runtime/overlay/vllm/v1/worker/gpu/model_runner.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "8d4cef9b5b6900809f5f03088d2512e74cb1eb4938a9a960fdf778f7d3829c91"
+  },
+  {
+    "path": "runtime/overlay/vllm/v1/worker/gpu/spec_decode/autoregressive/speculator.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "095e4e7ea66151eb3b1ef8d84ca5ad85411155f76e1815eed82608844839bc57"
+  },
+  {
+    "path": "runtime/overlay/vllm/v1/worker/gpu/spec_decode/utils.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "b4fa8c25c6467a31db66025be4a48c96c64f82cbe8b3d3f7185c70e0cb9927af"
+  },
+  {
+    "path": "runtime/overlay/vllm_ple_mmap.py",
+    "origin": "SM80 v0.2.0 with local compatibility changes",
+    "source_sha256": "250d0d1c71e6d930f88b765c22dea3b551c196b64d78d7c47896fc9a9ca51ee8"
+  },
+  {
+    "path": "runtime/plugin-overlay/vllm_gguf_plugin/csrc/gguf/moe_vec.cuh",
+    "origin": "vllm-gguf-plugin with local loading/padding changes",
+    "source_sha256": "5d23148469c13b428451767c4819e5225b38e2d49c6b95f3ab70d3dce705a7cf"
+  },
+  {
+    "path": "runtime/plugin-overlay/vllm_gguf_plugin/quantization/fused_moe.py",
+    "origin": "vllm-gguf-plugin with local loading/padding changes",
+    "source_sha256": "0994e154fa4368feba163acfd049b971e7dd422d559adf2984b9176c5dd7d46e"
+  },
+  {
+    "path": "runtime/plugin-overlay/vllm_gguf_plugin/quantization/params.py",
+    "origin": "vllm-gguf-plugin with local loading/padding changes",
+    "source_sha256": "a8d2e800e4c6ad3db1ddcbcb3fc55ad665c56570a66cba01cadfebc6f605ef16"
+  },
+  {
+    "path": "src/flashnext_gguf/q8_rows.cpp",
+    "origin": "local implementation; imports/packaging adjusted for this release",
+    "source_sha256": "3c65d3de5de76348f712b8bd2e209baf4ea6e74787a1e0d2db14b29e293186bb"
+  },
+  {
+    "path": "src/flashnext_gguf/debug.py",
+    "origin": "local implementation; imports/packaging adjusted for this release",
+    "source_sha256": "9ddad00290a8621f574a0a7d8a952ad6d70661f3d9159dd732762a878abfcdab"
+  },
+  {
+    "path": "src/flashnext_gguf/serving/q6_queue.py",
+    "origin": "local implementation; imports/packaging adjusted for this release",
+    "source_sha256": "f17aa54d6280682b9043c2c45007351d2cde5092b57734d362ea6710e1e95718"
+  },
+  {
+    "path": "src/flashnext_gguf/serving/admission.py",
+    "origin": "local implementation; imports/packaging adjusted for this release",
+    "source_sha256": "b21fb7d448b2e04d9c07552645c934d930e2c2d15d47e2843e2b3fbc61f01ec8"
+  }
+]

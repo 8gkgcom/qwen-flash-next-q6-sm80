@@ -1,0 +1,14 @@
+{
+  "vllm_gguf_plugin/csrc/gguf/moe_vec.cuh": {
+    "before_sha256": "dbe05b1a3515ebf3b2f3d07264f742566eb9f01bef769f46b2f90442a18633da",
+    "after_sha256": "5d23148469c13b428451767c4819e5225b38e2d49c6b95f3ab70d3dce705a7cf"
+  },
+  "vllm_gguf_plugin/quantization/fused_moe.py": {
+    "before_sha256": "bf195f8586bf6f0231e6b4e80c392fab1e39674590f89b482d6c8a279c4f80ab",
+    "after_sha256": "0994e154fa4368feba163acfd049b971e7dd422d559adf2984b9176c5dd7d46e"
+  },
+  "vllm_gguf_plugin/quantization/params.py": {
+    "before_sha256": "18032548702812fe5180e2eefe7139a49ec990cf30159672021b36d8345e693b",
+    "after_sha256": "a8d2e800e4c6ad3db1ddcbcb3fc55ad665c56570a66cba01cadfebc6f605ef16"
+  }
+}
