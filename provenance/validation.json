@@ -4,12 +4,15 @@
   "status": "experimental-source-package",
   "cpu_tests": {
     "environment": "Local Ubuntu under WSL, Python 3.12.3, g++",
-    "passed": 27,
+    "passed": 28,
     "failed": 0,
     "skipped": 0,
     "command": "PYTHONPATH=src Q6_REQUIRE_CPP=1 python3 -m unittest discover -s tests -v"
   },
   "source_checks": {
+    "clean_source_archive_files": 97,
+    "clean_source_archive_sha256_entries": 96,
+    "clean_source_archive_cpu_tests_passed": 28,
     "pinned_archives_verified": 3,
     "sm80_overlay_inputs_verified": 19,
     "plugin_overlay_inputs_verified": 3,
