@@ -1,0 +1,17 @@
+.git
+.venv*
+__pycache__
+**/__pycache__
+build
+dist
+data
+models
+cache
+runs
+.env*
+config/local*.json
+**/*.key
+**/*.pem
+**/*.gguf
+**/*.safetensors
+**/*.log

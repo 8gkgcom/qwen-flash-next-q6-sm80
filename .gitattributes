@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.png binary
+*.zip binary
+# Empty context lines in unified diffs contain a required prefix space.
+*.patch -whitespace

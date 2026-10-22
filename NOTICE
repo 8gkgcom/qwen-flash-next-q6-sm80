@@ -1,0 +1,16 @@
+Qwen Flash Next Q6 on SM80
+Copyright 2026 Q6 SM80 contributors
+
+Includes modified source from Qwen-Flash-SM80-170HX and the vLLM project.
+Copyright 2026 Qwen-Flash-SM80 contributors.
+Copyright contributors to the vLLM project.
+
+Includes inherited community PLE work credited upstream to blazux.
+Copyright 2026 blazux.
+
+Includes modified vllm-gguf-plugin source and integration informed by
+llama.cpp / gguf-py conversion and quantization formats.
+Original source headers and license notices are retained.
+
+See THIRD_PARTY_NOTICES.md and licenses/ for component attribution.
+Model weights, model metadata and third-party toolchains are not relicensed.

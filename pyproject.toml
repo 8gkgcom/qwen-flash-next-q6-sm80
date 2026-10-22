@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=77,<81"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flashnext-q6-sm80"
+version = "0.1.0"
+description = "Experimental Qwen Flash Next GGUF Q6_K integration for a pinned SM80 vLLM runtime"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+dependencies = []
+
+[project.entry-points."vllm.general_plugins"]
+flashnext_gguf = "flashnext_gguf:register"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+flashnext_gguf = ["q8_rows.cpp", "q8_rows.so"]

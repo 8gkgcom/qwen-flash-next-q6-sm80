@@ -1,0 +1,38 @@
+{
+  "base_image": "vllm/vllm-openai:qwen38-flash-next@sha256:fc120ece0a388cc0aa1caad4a9f1cd92113484ab7ec2fd0efadd62585be05bf8",
+  "sm80": {
+    "repository": "https://github.com/nguyenthimy2022kg-alt/Qwen-Flash-SM80-170HX",
+    "revision": "11421471c050cccc036b004e91345583e33993b2",
+    "url": "https://codeload.github.com/nguyenthimy2022kg-alt/Qwen-Flash-SM80-170HX/tar.gz/11421471c050cccc036b004e91345583e33993b2",
+    "sha256": "44b391de5c6d85f845dbbbddcd4c6b3125f7b13c8e5727f2a9484eaa770cdbf1"
+  },
+  "plugin": {
+    "repository": "https://github.com/vllm-project/vllm-gguf-plugin",
+    "revision": "e2b8ad532b8b5ea175100202c30430c1d2b5e6a8",
+    "url": "https://codeload.github.com/vllm-project/vllm-gguf-plugin/tar.gz/e2b8ad532b8b5ea175100202c30430c1d2b5e6a8",
+    "sha256": "f51ee9cb5735f0ffa55b35303915eadfd638cc6951ceeda2748a2ed36845a0f7"
+  },
+  "llama": {
+    "repository": "https://github.com/ggml-org/llama.cpp",
+    "revision": "98fd535f104720d35eed43d127dd83013aafabed",
+    "url": "https://codeload.github.com/ggml-org/llama.cpp/tar.gz/98fd535f104720d35eed43d127dd83013aafabed",
+    "sha256": "d37c0a83d7b1fc8e92193b7159170b0516f8c3aafc9ee57ccdd4fc3202d44c03"
+  },
+  "model": {
+    "repository": "orcarouter/Qwen3.8-Flash-Next-Uncensored-GGUF",
+    "revision": "d366e279688c1f2fd6e75e2f98475d38db534f1d",
+    "main_pattern": "Qwen3.8-Flash-Next-Uncensored-Q6_K-*.gguf",
+    "draft_file": "Qwen3.8-Flash-Next-Uncensored-MTP-draft.gguf"
+  },
+  "metadata": {
+    "repository": "Qwen/Qwen3.8-Flash-Next",
+    "revision": "de4b8e4d43b917e7706784d8bb445c9af86a3540",
+    "files": {
+      "config.json": "889658f2508e8c61d409b02e70e0d78d8d4452ec65aaafbe129805d213d2e74b",
+      "tokenizer.json": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3",
+      "tokenizer_config.json": "b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27",
+      "chat_template.jinja": "c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041",
+      "vocab.json": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003"
+    }
+  }
+}
