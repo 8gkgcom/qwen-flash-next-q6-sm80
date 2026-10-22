@@ -90,10 +90,21 @@ class ReleaseTests(unittest.TestCase):
                 with self.assertRaises(ValueError):fetch.extract_checked(archive,root/'out')
 
     def test_source_fingerprints_match_packaged_files(self):
+        selected={p.relative_to(ROOT).as_posix() for p in audit.files(ROOT)}
         for manifest,source in [('overlay-files.json','runtime/overlay'),('plugin-files.json','runtime/plugin-overlay')]:
             entries=json.loads((ROOT/'provenance'/manifest).read_text())
             for rel,item in entries.items():
+                self.assertIn(f'{source}/{rel}',selected,'Required overlay missing from release selection')
                 self.assertEqual(installer.digest(ROOT/source/rel),item['after_sha256'],rel)
+
+    def test_release_selection_keeps_model_code_and_excludes_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            keep='runtime/overlay/vllm/models/example/model.py'
+            for rel in [keep,'models/weights.gguf','build/source.py','dist/release.zip',
+                        'src/__pycache__/module.pyc','.git/config']:
+                path=root/rel;path.parent.mkdir(parents=True,exist_ok=True);path.write_text('fixture')
+            self.assertEqual({p.relative_to(root).as_posix() for p in audit.files(root)},{keep})
 
     def test_model_view_rejects_unrelated_architecture(self):
         with self.assertRaisesRegex(ValueError,'hidden_size'):prepare.text_config({'hidden_size':4096})
