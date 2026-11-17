@@ -1,0 +1,12 @@
+New adaptation code: Apache-2.0, repository LICENSE applies.
+The CUDA sources retain math from vllm-project/vllm-gguf-plugin (Apache-2.0)
+and llama.cpp (MIT). See LICENSE.gguf-plugin and LICENSE.llama.cpp.
+quantize.cuh is extracted from the pinned GGUF plugin's gguf_kernel.cu.
+moe.cuh adjusts the expert bound for the wrapper's validated 512-expert shape.
+Draft screening follows Qwen-Flash-SM80-170HX and this repository's
+q6_draft_q8_marlin.py; the PP3 INT4 screening adaptation retains the original
+Q8 top-32 rerank and target-model speculative verification.
+Sources:
+https://github.com/vllm-project/vllm-gguf-plugin
+https://github.com/ggml-org/llama.cpp
+https://github.com/nguyenthimy2022kg-alt/Qwen-Flash-SM80-170HX

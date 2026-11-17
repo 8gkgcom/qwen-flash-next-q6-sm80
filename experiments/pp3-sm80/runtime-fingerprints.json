@@ -1,0 +1,14 @@
+{
+  "sm80_revision": "4d229f1438486fa759727f128fc28f3609423dbb",
+  "public_repository_base": "1052e603d202f418b79fff35bb756afa3a56c1c8",
+  "files": {
+    "vllm/v1/core/sched/scheduler.py": "0737a1ce865fdbff31cee7d278b577b5ee078c85e2f8aed60e6dad558b3d0b7b",
+    "vllm/v1/worker/gpu/model_runner.py": "3cd75b39885a097e50a8bc00b75247b2732923bc5fd219539ddd12ca22df395d",
+    "vllm/v1/worker/gpu/spec_decode/speculator.py": "218e9a73eaa090947ab748fa4923821399b1f1086442a4a12986f425bb3ae8d9",
+    "vllm/v1/kv_offload/cpu/spec.py": "f7e3fda4ea318c87aa740cf02b466db0798d3a9c2b5660e899ed095e087bd222",
+    "vllm/v1/kv_offload/cpu/manager.py": "64b7ade9508fc4d1af5d7e67f030c05b3fe4b5dca0bcb6e91469ca0a127906c2",
+    "vllm/distributed/kv_transfer/kv_connector/v1/offloading_connector.py": "b5ddf7c1c8c50f6183dcdc4247759865b88e2b1b415e605c7993f615534912e0",
+    "vllm/v1/kv_cache_interface.py": "7452e823367960daf73520f80824aee0d5ed8ad2731d0404705695814d3bcff7"
+  },
+  "warning": "Local port includes additional compatibility edits. Matching upstream revision alone does not reproduce the tested runtime. This package does not install or upgrade vLLM."
+}

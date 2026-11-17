@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-17",
+  "hardware": {
+    "gpus": "3 x CMP 170HX 64 GiB",
+    "host_memory_gib": 157,
+    "power_limit_w": 180,
+    "layer_partition": [
+      18,
+      14,
+      16
+    ],
+    "air_cooled_stage": 1
+  },
+  "conditions": {
+    "temperature": 0,
+    "seed": 1234,
+    "thinking": false,
+    "output_tokens": 1024,
+    "measurement": "SSE first-to-last content chunk; excludes TTFT, approximate with MTP",
+    "miner": "paused during benchmarks"
+  },
+  "performance": [
+    {
+      "case": "english",
+      "baseline_decode_tps": 91.70306332493811,
+      "optimized_decode_tps": 107.11884872132806,
+      "optimized_ttft_seconds": 0.6096966419936507,
+      "optimized_end_to_end_tps": 100.7883666333922,
+      "prompt_tokens": 46,
+      "completion_tokens": 1024,
+      "output_sha256": "e5cfb8edf946fe68719386647c0954ac289c48579fb42922a970e75a45f10db4",
+      "output_same_as_baseline": true,
+      "speculative": {
+        "spec_decode_num_drafts_total": 407.0,
+        "spec_decode_num_draft_tokens_total": 814.0,
+        "spec_decode_num_accepted_tokens_total": 618.0
+      }
+    },
+    {
+      "case": "chinese",
+      "baseline_decode_tps": 79.55691775842236,
+      "optimized_decode_tps": 93.90085954447765,
+      "optimized_ttft_seconds": 0.23836626899719704,
+      "optimized_end_to_end_tps": 91.97963088262453,
+      "prompt_tokens": 62,
+      "completion_tokens": 1024,
+      "output_sha256": "f5492bca0173d20686f4e18eb72a0ec16047758d480c514e8f3ca3839a8ebcd2",
+      "output_same_as_baseline": true,
+      "speculative": {
+        "spec_decode_num_drafts_total": 469.0,
+        "spec_decode_num_draft_tokens_total": 938.0,
+        "spec_decode_num_accepted_tokens_total": 556.0
+      }
+    },
+    {
+      "case": "code",
+      "baseline_decode_tps": 96.67051775137458,
+      "optimized_decode_tps": 114.09786403405548,
+      "optimized_ttft_seconds": 0.22354956500203116,
+      "optimized_end_to_end_tps": 111.43044751062386,
+      "prompt_tokens": 56,
+      "completion_tokens": 1024,
+      "output_sha256": "5b69a52b4edb74759165995fbd5819a1ee5f9cac30102b8a277fee619228bcf8",
+      "output_same_as_baseline": true,
+      "speculative": {
+        "spec_decode_num_drafts_total": 386.0,
+        "spec_decode_num_draft_tokens_total": 772.0,
+        "spec_decode_num_accepted_tokens_total": 637.0
+      }
+    },
+    {
+      "case": "long_8k",
+      "baseline_decode_tps": 86.59918527108132,
+      "optimized_decode_tps": 103.07108501164761,
+      "optimized_ttft_seconds": 8.135009051002271,
+      "optimized_end_to_end_tps": 56.699032270676405,
+      "prompt_tokens": 8843,
+      "completion_tokens": 1024,
+      "output_sha256": "523a4c0c76b67a1da2f83a8626f27bd79673db680664349ab8e6b84b0d851a48",
+      "output_same_as_baseline": false,
+      "speculative": {
+        "spec_decode_num_drafts_total": 427.0,
+        "spec_decode_num_draft_tokens_total": 854.0,
+        "spec_decode_num_accepted_tokens_total": 597.0
+      }
+    }
+  ],
+  "concurrency": {
+    "completed": 8,
+    "tokens_each": 384,
+    "max_engine_running": 4,
+    "max_waiting": 4,
+    "overflow_status": 429
+  },
+  "stability": {
+    "requests": 4,
+    "input_tokens_each": "15279-15280",
+    "output_tokens_each": 4000,
+    "all_markers_correct": true,
+    "all_numbered_lines_continuous": true,
+    "preemptions_in_final_full_capacity_run": 0
+  },
+  "host_kv": {
+    "budget_gib": 24,
+    "actual_gib_approx": 19.8,
+    "slots": 224,
+    "checkpoint_tokens": 3456,
+    "restore_probe_passed": true,
+    "pressure_preemption_and_lru": "validated in preceding RAM-KV implementation; not re-triggered in final full-capacity speed run"
+  },
+  "target_120_tps_reached": false
+}

@@ -1,0 +1,582 @@
+{
+  "scope": "This machine/driver/topology only; no general claim about modified CMP drivers",
+  "copy_engine": [
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 16384,
+      "valid": true,
+      "gpu_us": 31.387,
+      "wall_us": 31.745,
+      "GB_s": 0.522
+    },
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 65536,
+      "valid": true,
+      "gpu_us": 69.39,
+      "wall_us": 69.691,
+      "GB_s": 0.944
+    },
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 1048576,
+      "valid": true,
+      "gpu_us": 818.362,
+      "wall_us": 818.677,
+      "GB_s": 1.281
+    },
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 16777216,
+      "valid": true,
+      "gpu_us": 10543.141,
+      "wall_us": 10543.71,
+      "GB_s": 1.591
+    },
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 16384,
+      "valid": false,
+      "gpu_us": 4.011,
+      "wall_us": 4.32,
+      "GB_s": 4.085
+    },
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 65536,
+      "valid": false,
+      "gpu_us": 11.391,
+      "wall_us": 11.696,
+      "GB_s": 5.753
+    },
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 1048576,
+      "valid": false,
+      "gpu_us": 157.778,
+      "wall_us": 158.083,
+      "GB_s": 6.646
+    },
+    {
+      "src": 0,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 16777216,
+      "valid": false,
+      "gpu_us": 2503.147,
+      "wall_us": 2503.565,
+      "GB_s": 6.702
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 16384,
+      "valid": true,
+      "gpu_us": 22.906,
+      "wall_us": 23.217,
+      "GB_s": 0.715
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 65536,
+      "valid": true,
+      "gpu_us": 36.352,
+      "wall_us": 36.626,
+      "GB_s": 1.803
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 1048576,
+      "valid": true,
+      "gpu_us": 333.507,
+      "wall_us": 333.787,
+      "GB_s": 3.144
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 16777216,
+      "valid": true,
+      "gpu_us": 2822.548,
+      "wall_us": 2822.929,
+      "GB_s": 5.944
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 16384,
+      "valid": false,
+      "gpu_us": 3.737,
+      "wall_us": 3.983,
+      "GB_s": 4.385
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 65536,
+      "valid": false,
+      "gpu_us": 11.028,
+      "wall_us": 11.279,
+      "GB_s": 5.943
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 1048576,
+      "valid": false,
+      "gpu_us": 157.393,
+      "wall_us": 157.679,
+      "GB_s": 6.662
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 16777216,
+      "valid": false,
+      "gpu_us": 2499.587,
+      "wall_us": 2499.969,
+      "GB_s": 6.712
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 16384,
+      "valid": true,
+      "gpu_us": 28.991,
+      "wall_us": 29.268,
+      "GB_s": 0.565
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 65536,
+      "valid": true,
+      "gpu_us": 66.325,
+      "wall_us": 66.611,
+      "GB_s": 0.988
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 1048576,
+      "valid": true,
+      "gpu_us": 802.375,
+      "wall_us": 802.697,
+      "GB_s": 1.307
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 16777216,
+      "valid": true,
+      "gpu_us": 10206.646,
+      "wall_us": 10207.233,
+      "GB_s": 1.644
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 16384,
+      "valid": false,
+      "gpu_us": 11.039,
+      "wall_us": 11.326,
+      "GB_s": 1.484
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 65536,
+      "valid": false,
+      "gpu_us": 39.852,
+      "wall_us": 40.128,
+      "GB_s": 1.644
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 1048576,
+      "valid": false,
+      "gpu_us": 614.711,
+      "wall_us": 615.009,
+      "GB_s": 1.706
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 16777216,
+      "valid": false,
+      "gpu_us": 9811.48,
+      "wall_us": 9811.963,
+      "GB_s": 1.71
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 16384,
+      "valid": true,
+      "gpu_us": 31.063,
+      "wall_us": 31.343,
+      "GB_s": 0.527
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 65536,
+      "valid": true,
+      "gpu_us": 66.629,
+      "wall_us": 66.904,
+      "GB_s": 0.984
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 1048576,
+      "valid": true,
+      "gpu_us": 802.771,
+      "wall_us": 803.089,
+      "GB_s": 1.306
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 0,
+      "bytes": 16777216,
+      "valid": true,
+      "gpu_us": 10206.007,
+      "wall_us": 10206.526,
+      "GB_s": 1.644
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 16384,
+      "valid": false,
+      "gpu_us": 11.069,
+      "wall_us": 11.344,
+      "GB_s": 1.48
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 65536,
+      "valid": false,
+      "gpu_us": 39.858,
+      "wall_us": 40.134,
+      "GB_s": 1.644
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 1048576,
+      "valid": false,
+      "gpu_us": 614.666,
+      "wall_us": 614.97,
+      "GB_s": 1.706
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "peer_enabled": 1,
+      "bytes": 16777216,
+      "valid": false,
+      "gpu_us": 9828.3,
+      "wall_us": 9828.791,
+      "GB_s": 1.707
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 16384,
+      "valid": true,
+      "gpu_us": 22.729,
+      "wall_us": 23.028,
+      "GB_s": 0.721
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 65536,
+      "valid": true,
+      "gpu_us": 37.679,
+      "wall_us": 37.975,
+      "GB_s": 1.739
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 1048576,
+      "valid": true,
+      "gpu_us": 333.574,
+      "wall_us": 333.907,
+      "GB_s": 3.143
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 0,
+      "bytes": 16777216,
+      "valid": true,
+      "gpu_us": 2819.255,
+      "wall_us": 2819.67,
+      "GB_s": 5.951
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 16384,
+      "valid": false,
+      "gpu_us": 3.812,
+      "wall_us": 4.092,
+      "GB_s": 4.298
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 65536,
+      "valid": false,
+      "gpu_us": 11.124,
+      "wall_us": 11.402,
+      "GB_s": 5.891
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 1048576,
+      "valid": false,
+      "gpu_us": 157.494,
+      "wall_us": 157.783,
+      "GB_s": 6.658
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "peer_enabled": 1,
+      "bytes": 16777216,
+      "valid": false,
+      "gpu_us": 2499.604,
+      "wall_us": 2499.983,
+      "GB_s": 6.712
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 16384,
+      "valid": true,
+      "gpu_us": 30.658,
+      "wall_us": 30.936,
+      "GB_s": 0.534
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 65536,
+      "valid": true,
+      "gpu_us": 67.459,
+      "wall_us": 67.745,
+      "GB_s": 0.971
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 1048576,
+      "valid": true,
+      "gpu_us": 818.029,
+      "wall_us": 818.335,
+      "GB_s": 1.282
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 0,
+      "bytes": 16777216,
+      "valid": true,
+      "gpu_us": 10538.267,
+      "wall_us": 10538.775,
+      "GB_s": 1.592
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 16384,
+      "valid": false,
+      "gpu_us": 3.974,
+      "wall_us": 4.267,
+      "GB_s": 4.122
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 65536,
+      "valid": false,
+      "gpu_us": 11.177,
+      "wall_us": 11.448,
+      "GB_s": 5.864
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 1048576,
+      "valid": false,
+      "gpu_us": 157.524,
+      "wall_us": 157.804,
+      "GB_s": 6.657
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "peer_enabled": 1,
+      "bytes": 16777216,
+      "valid": false,
+      "gpu_us": 2499.541,
+      "wall_us": 2499.924,
+      "GB_s": 6.712
+    }
+  ],
+  "nccl_shm": [
+    [
+      {
+        "rank": 0,
+        "bytes": 16384,
+        "valid": true,
+        "gpu_us": 63.432321548461914,
+        "wall_us": 64.2260599124711
+      },
+      {
+        "rank": 0,
+        "bytes": 65536,
+        "valid": true,
+        "gpu_us": 89.18656349182129,
+        "wall_us": 89.65897999587469
+      },
+      {
+        "rank": 0,
+        "bytes": 1048576,
+        "valid": true,
+        "gpu_us": 1098.8953399658203,
+        "wall_us": 1099.4066200510133
+      },
+      {
+        "rank": 0,
+        "bytes": 16777216,
+        "valid": true,
+        "gpu_us": 16004.522705078125,
+        "wall_us": 16005.23098008125
+      }
+    ],
+    [
+      {
+        "rank": 1,
+        "bytes": 16384,
+        "valid": true,
+        "gpu_us": 63.63647937774658,
+        "wall_us": 64.52245987020433
+      },
+      {
+        "rank": 1,
+        "bytes": 65536,
+        "valid": true,
+        "gpu_us": 87.2492790222168,
+        "wall_us": 87.72071989369579
+      },
+      {
+        "rank": 1,
+        "bytes": 1048576,
+        "valid": true,
+        "gpu_us": 1114.632339477539,
+        "wall_us": 1115.1452800550032
+      },
+      {
+        "rank": 1,
+        "bytes": 16777216,
+        "valid": true,
+        "gpu_us": 16060.106201171875,
+        "wall_us": 16060.83798003965
+      }
+    ],
+    [
+      {
+        "rank": 2,
+        "bytes": 16384,
+        "valid": true,
+        "gpu_us": 63.5148811340332,
+        "wall_us": 64.37005999032408
+      },
+      {
+        "rank": 2,
+        "bytes": 65536,
+        "valid": true,
+        "gpu_us": 90.68351745605469,
+        "wall_us": 91.2716198945418
+      },
+      {
+        "rank": 2,
+        "bytes": 1048576,
+        "valid": true,
+        "gpu_us": 1114.9292755126953,
+        "wall_us": 1115.4188799264375
+      },
+      {
+        "rank": 2,
+        "bytes": 16777216,
+        "valid": true,
+        "gpu_us": 16060.830078125,
+        "wall_us": 16061.539799993625
+      }
+    ]
+  ],
+  "nccl_forced_p2p": {
+    "cumem": "timeout before first payload validation",
+    "legacy": "timeout before first payload validation"
+  },
+  "default_enabled": false
+}

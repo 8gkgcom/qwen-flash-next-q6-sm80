@@ -1,0 +1,110 @@
+[
+  {
+    "layer": 0,
+    "kind": "gate",
+    "m": 52,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 2.2835216441308148e-05,
+    "finite": true
+  },
+  {
+    "layer": 0,
+    "kind": "gate",
+    "m": 128,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 2.3863309252192266e-05,
+    "finite": true
+  },
+  {
+    "layer": 0,
+    "kind": "down",
+    "m": 52,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 2.434906127746217e-05,
+    "finite": true
+  },
+  {
+    "layer": 0,
+    "kind": "down",
+    "m": 128,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 1.8406426534056664e-05,
+    "finite": true
+  },
+  {
+    "layer": 17,
+    "kind": "gate",
+    "m": 52,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 2.9398881451925263e-05,
+    "finite": true
+  },
+  {
+    "layer": 17,
+    "kind": "gate",
+    "m": 128,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 2.4690833015483804e-05,
+    "finite": true
+  },
+  {
+    "layer": 17,
+    "kind": "down",
+    "m": 52,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 1.9290304408059455e-05,
+    "finite": true
+  },
+  {
+    "layer": 17,
+    "kind": "down",
+    "m": 128,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 1.5027634617581498e-05,
+    "finite": true
+  },
+  {
+    "layer": 47,
+    "kind": "gate",
+    "m": 52,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 2.497733112249989e-05,
+    "finite": true
+  },
+  {
+    "layer": 47,
+    "kind": "gate",
+    "m": 128,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 2.7285143005428836e-05,
+    "finite": true
+  },
+  {
+    "layer": 47,
+    "kind": "down",
+    "m": 52,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 1.4704062778037041e-05,
+    "finite": true
+  },
+  {
+    "layer": 47,
+    "kind": "down",
+    "m": 128,
+    "all_experts": true,
+    "vec_equal": true,
+    "matrix_rel_l2": 1.8353126506553963e-05,
+    "finite": true
+  }
+]

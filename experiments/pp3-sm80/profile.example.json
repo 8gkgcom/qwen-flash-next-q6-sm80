@@ -1,0 +1,51 @@
+{
+  "status": "Integration reference, not consumed by the old PP2 serve.py",
+  "args": {
+    "tensor_parallel_size": 1,
+    "pipeline_parallel_size": 3,
+    "max_num_seqs": 4,
+    "max_num_batched_tokens": 1024,
+    "gpu_memory_utilization": 0.9,
+    "max_model_len": 262144,
+    "async_scheduling": true,
+    "dtype": "bfloat16",
+    "kv_cache_dtype": "auto",
+    "speculative_config": {
+      "method": "mtp",
+      "num_speculative_tokens": 2,
+      "quantization": "gguf",
+      "use_local_argmax_reduction": false
+    }
+  },
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "0,1,2",
+    "VLLM_PP_LAYER_PARTITION": "18,14,16",
+    "Q6_TEP_DRAFT": "0",
+    "Q6_DRAFT_Q8_MARLIN": "0",
+    "Q6_DYNAMIC_GRAPH_FIX": "0",
+    "Q6_CPU_IPC": "1",
+    "Q6_SHORTCONV_ASYNC": "1",
+    "Q6_MIXED_PREFILL_GUARD": "1",
+    "Q6_SPEED_ENABLE": "1",
+    "Q6_SPEED_HEAD_BITS": "4",
+    "Q6_MAX_RUNNING": "4",
+    "Q6_MAX_WAITING": "4",
+    "Q38_COMPACT_VOCAB": "0",
+    "Q38_PCIE_IPC": "0",
+    "NCCL_P2P_DISABLE": "1",
+    "Q6_KV_CACHE_MAX_BYTES": "8589934592"
+  },
+  "kv_transfer_config": {
+    "kv_connector": "Q6RAMKVConnector",
+    "kv_connector_module_path": "q6_ram_kv",
+    "kv_role": "kv_both",
+    "kv_connector_extra_config": {
+      "spec_name": "Q6CPUOffloadingSpec",
+      "spec_module_path": "q6_ram_kv",
+      "cpu_bytes_to_use": 25769803776,
+      "cpu_num_blocks": 224,
+      "eviction_policy": "lru",
+      "offload_prompt_only": false
+    }
+  }
+}
